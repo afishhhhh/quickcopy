@@ -1,0 +1,14 @@
+{
+  "miniprogramRoot": "<%= '/dist.' + projectName %>",
+  "projectname": "<%= projectName %>",
+  "description": "",
+  "appid": "<%= appId %>",
+  "setting": {
+    "urlCheck": true,
+    "es6": false,
+    "postcss": false,
+    "minified": false
+  },
+  "compileType": "miniprogram",
+  "libVersion": "<%= libVersion %>"
+}
