@@ -1,5 +1,6 @@
 module.exports = {
-  defineConstants: {
-    APP_NAME: JSON.stringify('')
+  defineConstants: <%- defineConstants %>,
+  copy: {
+    patterns: []
   }
 }

@@ -2,10 +2,12 @@ const process = require('process')
 const fs = require('fs').promises
 const path = require('path')
 const ejs = require('ejs')
+const prettier = require('prettier')
+const extractConfig = require('../utils/extractConfig')
 
 function renderFilePromisify(path, data) {
   return new Promise((resolve, reject) => {
-    ejs.renderFile(path, data, function(err, str) {
+    ejs.renderFile(path, data, function (err, str) {
       if (err) {
         reject(err)
         return
@@ -13,6 +15,65 @@ function renderFilePromisify(path, data) {
       resolve(str)
     })
   })
+}
+
+function getPrettierConfig(defaultOpts = {}) {
+  return Object.assign(
+    defaultOpts,
+    prettier.resolveConfig.sync(process.cwd(), {
+      useCache: true
+      // editorconfig: true
+    })
+  )
+}
+
+function initCompilerConfig(configPath) {
+  return extractConfig(path.join(process.cwd(), 'config/index.js'))
+    .then(defineConstants =>
+      renderFilePromisify(path.resolve(__dirname, '..', 'templates/config.index.js'), {
+        defineConstants
+      })
+    )
+    .then(compilerConfig => {
+      const prettierOpts = getPrettierConfig({
+        parser: 'babel'
+      })
+      return fs.writeFile(
+        path.join(configPath, 'index.js'),
+        prettier.format(compilerConfig, prettierOpts)
+      )
+    })
+    .catch(err => Promise.reject(err))
+}
+
+function initProjectConfig(configPath, projectName, appId) {
+  return fs
+    .readFile(`${process.cwd()}/project.config.json`)
+    .then(buffer => {
+      const { setting, libVersion = '2.7.3', condition = {} } = JSON.parse(
+        buffer.toString()
+      )
+      return renderFilePromisify(
+        path.resolve(__dirname, '..', 'templates/project.config.json'),
+        {
+          projectName,
+          appId,
+          setting,
+          libVersion,
+          condition
+        }
+      )
+    })
+    .then(projectConfig => {
+      const prettierOpts = getPrettierConfig({
+        parser: 'json'
+      })
+      return fs.writeFile(
+        path.join(configPath, 'project.config.json'),
+        prettier.format(projectConfig, prettierOpts)
+      )
+    })
+    .catch(err => Promise.reject(err))
 }
 
 module.exports = async function init(projectName, appId) {
@@ -30,25 +91,10 @@ module.exports = async function init(projectName, appId) {
     // 创建 config.project
     const configDirPath = path.join(process.cwd(), `config/config.${projectName}`)
     await fs.mkdir(configDirPath)
-    // 写入 config.project/index.js
-    const projectConfig = await renderFilePromisify(
-      path.resolve(__dirname, '..', 'templates/config.index.js'),
-      {}
-    )
-    await fs.writeFile(path.join(configDirPath, 'index.js'), projectConfig)
-    // 写入 config.project/project.config.json
-    const buf = await fs.readFile(`${process.cwd()}/project.config.json`)
-    const { setting, libVersion = '2.7.3', condition = {} } = JSON.parse(buf.toString())
-    const projectConfigJSON = await renderFilePromisify(
-      path.resolve(__dirname, '..', 'templates/project.config.json'),
-      { projectName, appId, libVersion }
-    )
-    await fs.writeFile(
-      path.join(configDirPath, 'project.config.json'),
-      projectConfigJSON
-    )
+    await initCompilerConfig(configDirPath)
+    await initProjectConfig(configDirPath, projectName, appId)
     // 创建 src.project
-    const srcDirPath = path.join(process.cwd(), `src/src.${projectName}`)
+    const srcDirPath = path.join(process.cwd(), `src/_src.${projectName}`)
     await fs.mkdir(srcDirPath)
   } catch (err) {
     console.error(err)

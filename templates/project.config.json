@@ -3,12 +3,8 @@
   "projectname": "<%= projectName %>",
   "description": "",
   "appid": "<%= appId %>",
-  "setting": {
-    "urlCheck": true,
-    "es6": false,
-    "postcss": false,
-    "minified": false
-  },
+  "setting": <%- JSON.stringify(setting) %>,
   "compileType": "miniprogram",
-  "libVersion": "<%= libVersion %>"
+  "libVersion": "<%= libVersion %>",
+  "condition": <%- JSON.stringify(condition) %>
 }
