@@ -2,7 +2,9 @@
   "name": "quickcopy",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "bin": {
+    "qc": "bin/quickcopy.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,7 +13,9 @@
   "dependencies": {
     "@babel/generator": "^7.11.6",
     "@babel/parser": "^7.11.5",
+    "chalk": "^4.1.0",
     "ejs": "^3.1.5",
+    "minimist": "^1.2.5",
     "prettier": "2.1.2"
   }
 }

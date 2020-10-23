@@ -2,8 +2,8 @@ const fs = require('fs').promises
 const { parse } = require('@babel/parser')
 const generate = require('@babel/generator').default
 
-function extractConfig(configFilePath, configName = []) {
-  return fs.readFile(configFilePath).then(configCode => {
+function getConfigByNames(configFilepath, configNames = []) {
+  return fs.readFile(configFilepath).then(configCode => {
     const configAst = parse(configCode.toString()).program.body.find(
       node =>
         node.type == 'VariableDeclaration' &&
@@ -16,7 +16,7 @@ function extractConfig(configFilePath, configName = []) {
       node => node.key.type == 'Identifier' && node.key.name == 'defineConstants'
     )
     defineConstantsAst.value.properties = defineConstantsAst.value.properties.filter(
-      node => node.key.type == 'Identifier' && node.key.name.startsWith('$')
+      node => node.key.type == 'Identifier' && node.key.name.startsWith('__')
     )
 
     const { code: defineConstantsCode } = generate(defineConstantsAst.value, {
@@ -31,4 +31,6 @@ function extractConfig(configFilePath, configName = []) {
   })
 }
 
-module.exports = extractConfig
+module.exports = {
+  getConfigByNames
+}

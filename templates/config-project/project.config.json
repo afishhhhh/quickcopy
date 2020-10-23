@@ -1,0 +1,28 @@
+{
+  "miniprogramRoot": "<%= './dist-' + projectName %>",
+  "projectname": "<%= projectName %>",
+  "description": "",
+  "appid": "<%= appId %>",
+  <%if (setting) {%>"setting": <%- JSON.stringify(setting) %>
+  <%} else {%>"setting": {
+    "urlCheck": true,
+    "es6": false,
+    "postcss": false,
+    "minified": false
+  }<%}%>,
+  "compileType": "miniprogram",
+  "libVersion": "<%= libVersion %>",
+  <%if (packOptions) {%>
+  "packOptions": <%- JSON.stringify(packOptions) %>,
+  <%}%>
+  <%if (debugOptions) {%>
+  "debugOptions": <%- JSON.stringify(debugOptions) %>,
+  <%}%>
+  <%if (watchOptions) {%>
+  "watchOptions": <%- JSON.stringify(watchOptions) %>,
+  <%}%>
+  <%if (scripts) {%>
+  "scripts": <%- JSON.stringify(scripts) %>,
+  <%}%>
+  "condition": <%- JSON.stringify(condition) %>
+}
