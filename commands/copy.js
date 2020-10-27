@@ -114,12 +114,12 @@ function initProjectConfig(configPath, projectName, appId) {
 
 module.exports = async function copy(projectName, appId) {
   if (!projectName) {
-    print('\n', warning('请输入项目名称'), '\n\n', failed('copy 命令执行失败'))
+    print('\n', warning('请输入项目名称'), '\n\n', failed('copy 指令执行失败'))
     return
   }
 
   if (!appId) {
-    print('\n', warning('请输入 appId'), '\n\n', failed('copy 命令执行失败'))
+    print('\n', warning('请输入 appId'), '\n\n', failed('copy 指令执行失败'))
     return
   }
 
@@ -133,7 +133,7 @@ module.exports = async function copy(projectName, appId) {
       '\n',
       warning(`项目 ${projectName} 已存在`),
       '\n\n',
-      failed('copy 命令执行失败')
+      failed('copy 指令执行失败')
     )
     return
   }
@@ -145,9 +145,9 @@ module.exports = async function copy(projectName, appId) {
     // 创建 src-project
     // const srcDirPath = path.join(process.cwd(), `src/src-${projectName}`)
     // await fs.mkdir(srcDirPath)
-    print('\n', success('copy 命令执行完成'))
+    print('\n', success('copy 指令执行完成'))
   } catch (err) {
-    print('\n', err, '\n\n', failed('copy 命令执行失败'))
+    print('\n', err, '\n\n', failed('copy 指令执行失败'))
     // TODO: rm
   }
 }

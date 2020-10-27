@@ -22,7 +22,7 @@ function isNoProjects() {
 
 module.exports = async function rm(projectName) {
   if (!projectName) {
-    print('\n', warning('请输入项目名称'), '\n\n', failed('rm 命令执行失败'))
+    print('\n', warning('请输入项目名称'), '\n\n', failed('rm 指令执行失败'))
     return
   }
 
@@ -42,9 +42,9 @@ module.exports = async function rm(projectName) {
       '\n',
       done(`项目 ${projectName} 已删除`),
       '\n\n',
-      success('rm 命令执行成功')
+      success('rm 指令执行成功')
     )
   } catch (err) {
-    print('\n', err, '\n\n', failed('rm 命令执行失败'))
+    print('\n', err, '\n\n', failed('rm 指令执行失败'))
   }
 }

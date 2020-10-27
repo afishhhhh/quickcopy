@@ -89,12 +89,12 @@ module.exports = async function sync(isAll = false) {
         '\n',
         warning('/config 目录下没有项目'),
         '\n\n',
-        failed('sync 命令执行失败')
+        failed('sync 指令执行失败')
       )
       return
     }
     await updateAllProjectConfig(projectPaths, parsedProjectConfig)
-    print('\n', success('sync 命令执行成功'))
+    print('\n', success('sync 指令执行成功'))
     return
   }
 
@@ -110,7 +110,7 @@ module.exports = async function sync(isAll = false) {
       '\n',
       warning(`项目 ${projectname} 不存在`),
       '\n\n',
-      failed('sync 命令执行失败')
+      failed('sync 指令执行失败')
     )
     return
   }
@@ -130,6 +130,6 @@ module.exports = async function sync(isAll = false) {
     '\n',
     done(`项目 ${projectname} 的 project.config.json 已更新`),
     '\n\n',
-    success('sync 命令执行成功')
+    success('sync 指令执行成功')
   )
 }
