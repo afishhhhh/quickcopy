@@ -1,3 +1,3 @@
 module.exports = {
-  CLI: 'quickapp'
+  name: 'quickcopy'
 }

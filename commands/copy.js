@@ -12,14 +12,16 @@ const {
 } = require('../utils/printHelpers')
 const renderFile = require('../utils/renderFile.promisify')
 const resolvePrettierOpts = require('../utils/resolvePrettierOpts')
-const { getConfigByNames } = require('../utils')
+const resolveBuildConfig = require('../utils/resolveBuildConfig')
 
 function initBuildConfig(configPath, projectName) {
   const taroBuildConfigPath = path.join(process.cwd(), 'config/index.js')
   const distBuildConfigPath = path.join(configPath, 'index.js')
 
-  return getConfigByNames(taroBuildConfigPath)
-    .then(defineConstants => {
+  return resolveBuildConfig(taroBuildConfigPath, {
+    dist: `dist-${projectName}`
+  })
+    .then(({ defineConstants, patterns }) => {
       print(
         '\n',
         done('读取 Taro 编译配置'),
@@ -28,7 +30,7 @@ function initBuildConfig(configPath, projectName) {
       )
       return renderFile(
         path.join(__dirname, '..', 'templates/config-project/index.js'),
-        { projectName, defineConstants }
+        { projectName, defineConstants, patterns }
       )
     })
     .then(buildConfig => {
