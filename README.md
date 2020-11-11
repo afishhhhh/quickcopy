@@ -2,25 +2,47 @@
 
 为什么写了这个工具：[一套代码发布多个微信小程序的实践](https://github.com/afishhhhh/blog/issues/12)
 
-Taro：
-- [x] v2.x
+- [x] Taro v2.x
 
-小程序：
-- [x] 微信
+- [x] 微信小程序
 
-### 安装
+## 安装
 
 ```
 npm install
 ```
 
-### 如何使用
+## 如何使用
 
-#### copy 指令
+在复制新项目之前，我们需要对 **Taro 编译配置文件** (_config/index.js_) 进行一定的改造，在[这篇文章](https://github.com/afishhhhh/blog/issues/12)里写了比较详细的改造过程。
 
-`qc copy [projectname] [appid]`
+### copy 指令
 
-以原项目为模版生成以下内容：
+这个指令用于复制出一个新的项目。主要行为包括：
+
+1. 以 _config/index.js_ 为模版，创建新项目的 **Taro 编译配置文件**；
+
+2. 以根目录 _project.config.json_ 为模版，创建新项目的 **小程序项目配置文件**；
+
+3. 为新项目创建 **主题样式文件**。
+
+在项目根目录执行：
+
+```
+npm run copy -- [projectname] [appid]
+```
+
+比如：
+
+```
+npm run copy -- newProject wx123456789
+```
+
+### prep 指令
+
+用于指定当前准备编译的项目，并做一些准备工作，随后就可执行编译。主要行为包括：
+
+1. 
 
 1. Taro 编译配置
 
