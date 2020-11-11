@@ -37,9 +37,9 @@ function exportBuildConfig(projectName) {
     )
 }
 
-module.exports = async function ready(projectName) {
+module.exports = async function prep(projectName) {
   if (!projectName) {
-    print('\n', warning('请输入项目名称'), '\n\n', failed('ready 指令执行失败'))
+    print('\n', warning('请输入项目名称'), '\n\n', failed('prep 指令执行失败'))
     return
   }
 
@@ -62,7 +62,7 @@ module.exports = async function ready(projectName) {
     }
   ]) {
     if (!existsSync(filepath)) {
-      print('\n', warning(error), '\n\n', failed('ready 指令执行失败'))
+      print('\n', warning(error), '\n\n', failed('prep 指令执行失败'))
       return
     }
   }
@@ -87,7 +87,7 @@ module.exports = async function ready(projectName) {
         '\n',
         styledPath(rootProjectConfigPath),
         '\n\n',
-        success('ready 指令执行完成')
+        success('prep 指令执行完成')
       )
       return
     }
@@ -116,12 +116,12 @@ module.exports = async function ready(projectName) {
         '\n',
         styledPath(dist),
         '\n\n',
-        success('ready 指令执行完成')
+        success('prep 指令执行完成')
       )
       return
     }
 
-    // 根目录 project.config.json 的 projectname 与 ready 不同
+    // 根目录 project.config.json 的 projectname 与 prep 不同
     const otherConfigDirPath = path.join(
       process.cwd(),
       'config',
@@ -153,9 +153,9 @@ module.exports = async function ready(projectName) {
       '\n',
       styledPath(rootProjectConfigPath),
       '\n\n',
-      success('ready 指令执行完成')
+      success('prep 指令执行完成')
     )
   } catch (err) {
-    print('\n', err, '\n\n', failed('ready 指令执行失败'))
+    print('\n', err, '\n\n', failed('prep 指令执行失败'))
   }
 }

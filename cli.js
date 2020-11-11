@@ -1,7 +1,7 @@
 const process = require('process')
 const minimist = require('minimist')
 const copy = require('./commands/copy')
-const ready = require('./commands/ready')
+const prep = require('./commands/prep')
 const sync = require('./commands/sync')
 const rm = require('./commands/rm')
 const { print, warning } = require('./utils/printHelpers')
@@ -30,8 +30,8 @@ class CLI {
           copy(projectName, appId)
           break
         }
-        case 'ready': {
-          ready(projectName)
+        case 'prep': {
+          prep(projectName)
           break
         }
         case 'sync': {
@@ -45,36 +45,41 @@ class CLI {
         }
         default: {
           print('\n', warning('请输入正确的指令'))
-          // process.exit(1)
+          // TODO: process.exit(1)
           break
         }
       }
-    } else {
-      if (args.help || args.version) {
-        const { version } = require('./package.json')
-        print(
-          '\n',
-          `Quickcopy version: ${version}`,
-          '\n\n',
-          'Usage: qc <command> [options]',
-          '\n\n',
-          'Options:',
-          '\n',
-          '  -h --help                   查看使用说明',
-          '\n',
-          '  -v --version                查看版本信息',
-          '\n\n',
-          'Commands:',
-          '\n',
-          '  copy [projectName] [appId]  复制一个新的项目',
-          '\n',
-          '  ready [projectName]         执行编译前的准备工作',
-          '\n',
-          '  sync                        同步项目配置文件',
-          '\n',
-          '  rm [projectName]            移除一个项目'
-        )
-      }
+      return
+    }
+
+    const { version } = require('./package.json')
+    if (args.help) {
+      print(
+        '\n',
+        `Quickcopy version: ${version}`,
+        '\n\n',
+        'Usage: qc <command> [options]',
+        '\n\n',
+        'Options:',
+        '\n',
+        '  -h --help                   查看使用说明',
+        '\n',
+        '  -v --version                查看版本信息',
+        '\n\n',
+        'Commands:',
+        '\n',
+        '  copy [projectName] [appId]  复制一个新的项目',
+        '\n',
+        '  prep [projectName]          执行编译前的准备工作',
+        '\n',
+        '  sync                        同步项目配置文件',
+        '\n',
+        '  rm [projectName]            移除一个项目'
+      )
+      return
+    }
+    if (args.version) {
+      print('\n', `Quickcopy version: ${version}`)
     }
   }
 }

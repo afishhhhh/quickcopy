@@ -1,5 +1,4 @@
-const process = require('process')
-const { promises: fs, existsSync } = require('fs')
+const { promises: fs, existsSync, mkdirSync } = require('fs')
 const path = require('path')
 const prettier = require('prettier')
 const {
@@ -14,23 +13,27 @@ const renderFile = require('../utils/renderFile.promisify')
 const resolvePrettierOpts = require('../utils/resolvePrettierOpts')
 const resolveBuildConfig = require('../utils/resolveBuildConfig')
 
-function initBuildConfig(configPath, projectName) {
-  const taroBuildConfigPath = path.join(process.cwd(), 'config/index.js')
+function initBuildConfig(configPath, projectName, sassResource) {
+  const taroBuildConfigPath = './config/index.js'
   const distBuildConfigPath = path.join(configPath, 'index.js')
 
-  return resolveBuildConfig(taroBuildConfigPath, {
-    dist: `dist-${projectName}`
+  return resolveBuildConfig({
+    src: taroBuildConfigPath,
+    opts: {
+      project: projectName,
+      sass: sassResource
+    }
   })
-    .then(({ defineConstants, patterns }) => {
+    .then(({ patterns, resource, defineConstants }) => {
       print(
         '\n',
         done('读取 Taro 编译配置'),
         ' ',
-        styledPath(taroBuildConfigPath)
+        styledPath(path.resolve(taroBuildConfigPath))
       )
       return renderFile(
         path.join(__dirname, '..', 'templates/config-project/index.js'),
-        { projectName, defineConstants, patterns }
+        { projectName, patterns, resource, defineConstants }
       )
     })
     .then(buildConfig => {
@@ -47,23 +50,22 @@ function initBuildConfig(configPath, projectName) {
       print(
         done(`为项目 ${projectName} 创建 Taro 编译配置`),
         ' ',
-        styledPath(distBuildConfigPath)
+        styledPath(path.resolve(distBuildConfigPath))
       )
     )
 }
 
 function initProjectConfig(configPath, projectName, appId) {
-  const wxProjectConfigPath = path.join(process.cwd(), 'project.config.json')
   const distProjectConfigPath = path.join(configPath, 'project.config.json')
 
   return fs
-    .readFile(wxProjectConfigPath)
+    .readFile('./project.config.json')
     .then(buffer => {
       print(
         '\n',
         done('读取微信小程序项目配置'),
         ' ',
-        styledPath(wxProjectConfigPath)
+        styledPath(path.resolve('./project.config.json'))
       )
       const {
         setting,
@@ -107,9 +109,24 @@ function initProjectConfig(configPath, projectName, appId) {
       print(
         done(`为项目 ${projectName} 创建微信小程序项目配置`),
         ' ',
-        styledPath(distProjectConfigPath)
+        styledPath(path.resolve(distProjectConfigPath))
       )
     )
+}
+
+function createThemeScss(projectName) {
+  const dirs = ['src/style', 'src/styles', 'src/css']
+  const dir = dirs.find(existsSync) || dirs[0]
+  const themeDir = path.join(dir, 'themes')
+  if (!existsSync(themeDir)) {
+    mkdirSync(themeDir, {
+      recursive: true
+    })
+  }
+  const themeFilepath = path.join(themeDir, `${projectName}.scss`)
+  return fs
+    .writeFile(themeFilepath, `/* ${projectName} Theme */`)
+    .then(() => themeFilepath)
 }
 
 module.exports = async function copy(projectName, appId) {
@@ -123,11 +140,7 @@ module.exports = async function copy(projectName, appId) {
     return
   }
 
-  const configDirPath = path.join(
-    process.cwd(),
-    'config',
-    `config-${projectName}`
-  )
+  const configDirPath = path.join('config', `config-${projectName}`)
   if (existsSync(configDirPath)) {
     print(
       '\n',
@@ -140,11 +153,10 @@ module.exports = async function copy(projectName, appId) {
 
   try {
     await fs.mkdir(configDirPath)
-    await initBuildConfig(configDirPath, projectName)
+    const themeFilepath = await createThemeScss(projectName)
+    await initBuildConfig(configDirPath, projectName, themeFilepath)
     await initProjectConfig(configDirPath, projectName, appId)
-    // 创建 src-project
-    // const srcDirPath = path.join(process.cwd(), `src/src-${projectName}`)
-    // await fs.mkdir(srcDirPath)
+
     print('\n', success('copy 指令执行完成'))
   } catch (err) {
     print('\n', err, '\n\n', failed('copy 指令执行失败'))
