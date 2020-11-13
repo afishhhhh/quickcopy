@@ -10,12 +10,9 @@
   },
   "files": [
     "bin",
-    "commands",
+    "src",
     "plugin-copy-assets",
-    "plugin-resolve-page",
     "templates",
-    "utils",
-    "cli.js",
     "index.js"
   ],
   "repository": {
@@ -41,5 +38,9 @@
     "ejs": "^3.1.5",
     "minimist": "^1.2.5",
     "prettier": "2.1.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3"
   }
 }

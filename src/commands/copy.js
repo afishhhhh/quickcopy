@@ -32,7 +32,7 @@ function initBuildConfig(configPath, projectName, sassResource) {
         styledPath(path.resolve(taroBuildConfigPath))
       )
       return renderFile(
-        path.join(__dirname, '..', 'templates/config-project/index.js'),
+        path.join(__dirname, '../../', 'templates/build.config.js'),
         { projectName, patterns, resource, defineConstants }
       )
     })
@@ -56,16 +56,17 @@ function initBuildConfig(configPath, projectName, sassResource) {
 }
 
 function initProjectConfig(configPath, projectName, appId) {
+  const rootProjectConfigPath = './project.config.json'
   const distProjectConfigPath = path.join(configPath, 'project.config.json')
 
   return fs
-    .readFile('./project.config.json')
+    .readFile(rootProjectConfigPath)
     .then(buffer => {
       print(
         '\n',
         done('读取微信小程序项目配置'),
         ' ',
-        styledPath(path.resolve('./project.config.json'))
+        styledPath(path.resolve(rootProjectConfigPath))
       )
       const {
         setting,
@@ -77,11 +78,7 @@ function initProjectConfig(configPath, projectName, appId) {
         condition = {}
       } = JSON.parse(buffer.toString())
       return renderFile(
-        path.join(
-          __dirname,
-          '..',
-          'templates/config-project/project.config.json'
-        ),
+        path.join(__dirname, '../../', 'templates/project.config.json'),
         {
           projectName,
           appId,
@@ -124,9 +121,14 @@ function createThemeScss(projectName) {
     })
   }
   const themeFilepath = path.join(themeDir, `${projectName}.scss`)
-  return fs
-    .writeFile(themeFilepath, `/* ${projectName} Theme */`)
-    .then(() => themeFilepath)
+  return fs.writeFile(themeFilepath, `/* ${projectName} Theme */`).then(() => {
+    print(
+      done(`为项目 ${projectName} 创建主题样式文件`),
+      ' ',
+      styledPath(path.resolve(themeFilepath))
+    )
+    return themeFilepath
+  })
 }
 
 module.exports = async function copy(projectName, appId) {

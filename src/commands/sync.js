@@ -14,7 +14,11 @@ function updateAllProjectConfig(configPaths, projectConfig) {
   return Promise.all(
     configPaths.reduce((init, filepath) => {
       if (!existsSync(filepath)) {
-        print(warning('没有项目配置文件'), ' ', styledPath(filepath))
+        print(
+          warning('没有项目配置文件'),
+          ' ',
+          styledPath(path.resolve(filepath))
+        )
         init.push(Promise.resolve())
       } else {
         init.push(
@@ -39,7 +43,11 @@ function updateAllProjectConfig(configPaths, projectConfig) {
               )
             })
             .then(() =>
-              print(done('项目配置文件已更新'), ' ', styledPath(filepath))
+              print(
+                done('项目配置文件已更新'),
+                ' ',
+                styledPath(path.resolve(filepath))
+              )
             )
         )
       }
@@ -49,16 +57,14 @@ function updateAllProjectConfig(configPaths, projectConfig) {
 }
 
 function readRootProjectConfig() {
-  return fs
-    .readFile(path.join(process.cwd(), 'project.config.json'))
-    .then(buffer => {
-      print('\n', done('从根目录读取微信小程序项目配置 /project.config.json'))
-      return buffer.toString()
-    })
+  return fs.readFile('./project.config.json').then(buffer => {
+    print('\n', done('从根目录读取微信小程序项目配置 project.config.json'))
+    return buffer.toString()
+  })
 }
 
 function getAllProjectPaths() {
-  const configDirPath = path.join(process.cwd(), 'config')
+  const configDirPath = './config'
   const isProjectConfigDir = dirent => {
     return dirent.isDirectory() && dirent.name.startsWith('config-')
   }
@@ -67,7 +73,7 @@ function getAllProjectPaths() {
       withFileTypes: true
     })
     .then(projectConfigDirs => {
-      print('\n', done('查找 /config 目录下所有项目'))
+      print('\n', done('查找 config 目录下所有项目'))
       return projectConfigDirs.reduce((init, dirent) => {
         if (isProjectConfigDir(dirent)) {
           init.push(
@@ -87,7 +93,7 @@ module.exports = async function sync(isAll = false) {
     if (projectPaths.length == 0) {
       print(
         '\n',
-        warning('/config 目录下没有项目'),
+        warning('config 目录下没有项目'),
         '\n\n',
         failed('sync 指令执行失败')
       )
@@ -100,11 +106,7 @@ module.exports = async function sync(isAll = false) {
 
   // 将 srcProjectConfig 更新至对应项目的目录下
   const { projectname } = parsedProjectConfig
-  const distProjectConfigDirPath = path.join(
-    process.cwd(),
-    'config',
-    `config-${projectname}`
-  )
+  const distProjectConfigDirPath = path.join('config', `config-${projectname}`)
   if (!existsSync(distProjectConfigDirPath)) {
     print(
       '\n',

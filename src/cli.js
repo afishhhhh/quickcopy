@@ -52,7 +52,7 @@ class CLI {
       return
     }
 
-    const { version } = require('./package.json')
+    const { version } = require('../package.json')
     if (args.help) {
       print(
         '\n',

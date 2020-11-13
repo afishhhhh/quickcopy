@@ -1,4 +1,4 @@
 #! /usr/bin/env node
 
-const CLI = require('../cli')
+const CLI = require('../src/cli')
 new CLI().run()

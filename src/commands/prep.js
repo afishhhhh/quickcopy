@@ -21,18 +21,19 @@ async function compareModifyTime(filepath, anotherFilepath) {
 }
 
 function exportBuildConfig(projectName) {
-  return renderFile(path.join(__dirname, '..', 'templates/build.export.js'), {
-    projectName
-  })
-    .then(exported =>
-      fs.writeFile(path.join(process.cwd(), 'config/build.export.js'), exported)
-    )
+  const distBuildExportPath = './config/build.export.js'
+
+  return renderFile(
+    path.join(__dirname, '../../', 'templates/build.export.js'),
+    { projectName }
+  )
+    .then(exported => fs.writeFile(distBuildExportPath, exported))
     .then(() =>
       print(
         '\n',
         done(`创建导出文件, 导出项目 ${projectName} 的 Taro 编译配置`),
         ' ',
-        styledPath(path.join(process.cwd(), 'config/build.export.js'))
+        styledPath(path.resolve(distBuildExportPath))
       )
     )
 }
@@ -43,11 +44,7 @@ module.exports = async function prep(projectName) {
     return
   }
 
-  const configDirPath = path.join(
-    process.cwd(),
-    'config',
-    `config-${projectName}`
-  )
+  const configDirPath = path.join('config', `config-${projectName}`)
   const buildConfigPath = path.join(configDirPath, 'index.js')
   const projectConfigPath = path.join(configDirPath, 'project.config.json')
   for (const { filepath, error } of [
@@ -71,10 +68,8 @@ module.exports = async function prep(projectName) {
     // 导出编译配置
     await exportBuildConfig(projectName)
     // 拷贝项目配置到根目录
-    const rootProjectConfigPath = path.join(
-      process.cwd(),
-      'project.config.json'
-    )
+    const rootProjectConfigPath = './project.config.json'
+
     if (!existsSync(rootProjectConfigPath)) {
       print('\n', warning('根目录下没有 project.config.json 文件'))
       // 如果根目录下没有 project.config.json 则创建一个
@@ -83,9 +78,9 @@ module.exports = async function prep(projectName) {
         '\n',
         done(`复制项目 ${projectName} 的 project.config.json 至根目录`),
         '\n',
-        styledPath(projectConfigPath),
+        styledPath(path.resolve(projectConfigPath)),
         '\n',
-        styledPath(rootProjectConfigPath),
+        styledPath(path.resolve(rootProjectConfigPath)),
         '\n\n',
         success('prep 指令执行完成')
       )
@@ -112,9 +107,9 @@ module.exports = async function prep(projectName) {
         '\n',
         done('以下项目配置文件已同步更新：'),
         '\n',
-        styledPath(src),
+        styledPath(path.resolve(src)),
         '\n',
-        styledPath(dist),
+        styledPath(path.resolve(dist)),
         '\n\n',
         success('prep 指令执行完成')
       )
@@ -122,11 +117,7 @@ module.exports = async function prep(projectName) {
     }
 
     // 根目录 project.config.json 的 projectname 与 prep 不同
-    const otherConfigDirPath = path.join(
-      process.cwd(),
-      'config',
-      `config-${rootProjectName}`
-    )
+    const otherConfigDirPath = path.join('config', `config-${rootProjectName}`)
     // 如果根 project.config.json 项目存在
     if (existsSync(otherConfigDirPath)) {
       const src = rootProjectConfigPath
@@ -137,9 +128,9 @@ module.exports = async function prep(projectName) {
           '\n',
           done('以下项目配置文件已同步更新：'),
           '\n',
-          styledPath(src),
+          styledPath(path.resolve(src)),
           '\n',
-          styledPath(dist)
+          styledPath(path.resolve(dist))
         )
       }
     }
@@ -149,9 +140,9 @@ module.exports = async function prep(projectName) {
       '\n',
       done('以下项目配置文件已同步更新：'),
       '\n',
-      styledPath(projectConfigPath),
+      styledPath(path.resolve(projectConfigPath)),
       '\n',
-      styledPath(rootProjectConfigPath),
+      styledPath(path.resolve(rootProjectConfigPath)),
       '\n\n',
       success('prep 指令执行完成')
     )
