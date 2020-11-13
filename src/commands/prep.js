@@ -1,4 +1,3 @@
-const process = require('process')
 const { promises: fs, existsSync } = require('fs')
 const path = require('path')
 const {

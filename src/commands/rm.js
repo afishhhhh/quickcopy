@@ -1,5 +1,4 @@
-const process = require('process')
-const fs = require('fs').promises
+const { promises: fs, existsSync } = require('fs')
 const path = require('path')
 const {
   print,
@@ -14,10 +13,24 @@ function isNoProjects() {
     return dirent.isDirectory() && dirent.name.startsWith('config-')
   }
   return fs
-    .readdir(path.join(process.cwd(), 'config'), {
+    .readdir('./config', {
       withFileTypes: true
     })
     .then(projectDirs => !projectDirs.some(isProjectConfigDir))
+}
+
+function removeConfigDir(project) {
+  return fs.rmdir(path.join('config', `config-${project}`), {
+    recursive: true
+  })
+}
+
+function removeThemeScssFile(project) {
+  const filepath = ['style', 'styles', 'css']
+    .map(dirname => path.join('src', dirname, 'themes', `${project}.scss`))
+    .find(filepath => existsSync(filepath))
+
+  return fs.unlink(filepath)
 }
 
 module.exports = async function rm(projectName) {
@@ -27,17 +40,13 @@ module.exports = async function rm(projectName) {
   }
 
   try {
-    await Promise.all(
-      ['config', 'src'].map(dirname =>
-        fs.rmdir(
-          path.join(process.cwd(), dirname, `${dirname}-${projectName}`),
-          { recursive: true }
-        )
-      )
-    )
+    await removeConfigDir(projectName)
+    await removeThemeScssFile(projectName)
+
     if (await isNoProjects()) {
-      await fs.unlink(path.join(process.cwd(), 'config', 'build.export.js'))
+      await fs.unlink('config/build.export.js')
     }
+
     print(
       '\n',
       done(`项目 ${projectName} 已删除`),

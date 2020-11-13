@@ -123,6 +123,7 @@ function createThemeScss(projectName) {
   const themeFilepath = path.join(themeDir, `${projectName}.scss`)
   return fs.writeFile(themeFilepath, `/* ${projectName} Theme */`).then(() => {
     print(
+      '\n',
       done(`为项目 ${projectName} 创建主题样式文件`),
       ' ',
       styledPath(path.resolve(themeFilepath))

@@ -1,5 +1,4 @@
 const { promises: fs, existsSync } = require('fs')
-const process = require('process')
 const path = require('path')
 const {
   print,
@@ -57,8 +56,14 @@ function updateAllProjectConfig(configPaths, projectConfig) {
 }
 
 function readRootProjectConfig() {
-  return fs.readFile('./project.config.json').then(buffer => {
-    print('\n', done('从根目录读取微信小程序项目配置 project.config.json'))
+  const rootProjectConfigPath = './project.config.json'
+  return fs.readFile(rootProjectConfigPath).then(buffer => {
+    print(
+      '\n',
+      done('从根目录读取小程序项目配置 project.config.json'),
+      ' ',
+      styledPath(path.resolve(rootProjectConfigPath))
+    )
     return buffer.toString()
   })
 }
@@ -131,6 +136,8 @@ module.exports = async function sync(isAll = false) {
   print(
     '\n',
     done(`项目 ${projectname} 的 project.config.json 已更新`),
+    ' ',
+    styledPath(path.resolve(distProjectConfigPath)),
     '\n\n',
     success('sync 指令执行成功')
   )
