@@ -12,6 +12,15 @@
 npm install github:afishhhhh/quickcopy --save-dev
 ```
 
+根据自己的需要在 _package.json_ 的 `scripts` 中写入：
+
+```json
+"copy": "qc copy",
+"prep": "qc prep",
+"sync": "qc sync",
+"rm": "qc rm"
+```
+
 ## 如何使用
 
 在复制新项目之前，我们需要对 **Taro 编译配置文件** (_config/index.js_) 进行一定的改造，在[这篇文章](https://github.com/afishhhhh/blog/issues/12)里列出了改造要点。
@@ -73,7 +82,7 @@ npm run sync -- --all
 用于删除一个项目。
 
 ```
-npm run rm [projectname]
+npm run rm -- [projectname]
 ```
 
 ### plugin-copy-assets
