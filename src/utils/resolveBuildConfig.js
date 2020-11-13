@@ -42,7 +42,7 @@ module.exports = function resolveBuildConfig({ src, opts }) {
           // 不是 JSON.stringify
           const value = t.callExpression(
             t.memberExpression(t.identifier('JSON'), t.identifier('stringify')),
-            node.value.arguments.map(node => t.cloneNode(node, true, true))
+            node.value.arguments.map(node => t.cloneNode(node, false, true))
           )
           defineConstantsProperties.push(t.objectProperty(key, value))
         }
@@ -64,10 +64,10 @@ module.exports = function resolveBuildConfig({ src, opts }) {
             const { value } = _path.parent
             if (t.isArrayExpression(value)) {
               value.elements.forEach(el =>
-                sassResources.push(t.cloneNode(el, true, true))
+                sassResources.push(t.cloneNode(el, false, true))
               )
             } else {
-              sassResources.push(t.cloneNode(value, true, true))
+              sassResources.push(t.cloneNode(value, false, true))
             }
             break
           }
