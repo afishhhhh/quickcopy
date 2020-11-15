@@ -87,4 +87,4 @@ npm run rm -- [projectname]
 
 ### plugin-copy-assets
 
-这是一个 **Taro 插件**，在[这篇文章](https://github.com/afishhhhh/blog/issues/12)里介绍了这个插件的使用场景。
+这是一个 **Taro 插件**，在[这篇文章](https://github.com/afishhhhh/blog/issues/12)里介绍了这个插件的使用场景。从 **Taro 2.2** 开始支持。
