@@ -1,0 +1,6 @@
+// $main-color: red;
+
+@mixin text {
+  font-size: 20PX;
+  border: 10px solid $main-color;
+}
