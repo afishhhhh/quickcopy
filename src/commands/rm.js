@@ -8,6 +8,8 @@ const {
   success
 } = require('../utils/printHelpers')
 
+// TODO: rm dist
+
 function isNoProjects() {
   const isProjectConfigDir = dirent => {
     return dirent.isDirectory() && dirent.name.startsWith('config-')
@@ -30,7 +32,14 @@ function removeThemeScssFile(project) {
     .map(dirname => path.join('src', dirname, 'themes', `${project}.scss`))
     .find(filepath => existsSync(filepath))
 
-  return fs.unlink(filepath)
+  return fs
+    .unlink(filepath)
+    .then(() => fs.readdir(path.join(filepath, '..')))
+    .then(files => {
+      if (files.length == 0) {
+        return fs.rmdir(path.join(filepath, '..'))
+      }
+    })
 }
 
 module.exports = async function rm(projectName) {
@@ -43,8 +52,9 @@ module.exports = async function rm(projectName) {
     await removeConfigDir(projectName)
     await removeThemeScssFile(projectName)
 
-    if (await isNoProjects()) {
-      await fs.unlink('config/build.export.js')
+    const buildExportPath = 'config/build.export.js'
+    if ((await isNoProjects()) && existsSync(buildExportPath)) {
+      await fs.unlink(buildExportPath)
     }
 
     print(

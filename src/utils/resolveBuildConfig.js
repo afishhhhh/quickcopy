@@ -11,6 +11,7 @@ module.exports = function resolveBuildConfig({ src, opts }) {
     const defineConstantsProperties = []
     const patternsElements = []
     const sassResources = []
+    const requires = []
 
     const patternVisitor = {
       noScope: true,
@@ -48,6 +49,40 @@ module.exports = function resolveBuildConfig({ src, opts }) {
         }
       }
     }
+    const sassResourceVisitor = {
+      noScope: true,
+      StringLiteral(_path) {
+        sassResources.push(t.cloneNode(_path.node, true, true))
+        _path.skip()
+      },
+      CallExpression(_path) {
+        const sassFilepath = path.join(
+          '/',
+          ..._path.node.arguments.reduce((init, arg) => {
+            if (t.isStringLiteral(arg)) {
+              init.push(arg.value)
+            }
+            return init
+          }, [])
+        )
+        sassResources.push(
+          t.callExpression(
+            t.memberExpression(t.identifier('path'), t.identifier('join')),
+            [
+              t.callExpression(
+                t.memberExpression(
+                  t.identifier('process'),
+                  t.identifier('cwd')
+                ),
+                []
+              ),
+              t.stringLiteral(sassFilepath)
+            ]
+          )
+        )
+        _path.skip()
+      }
+    }
 
     const ast = parse(buildConfig.toString())
     const { body } = ast.program
@@ -60,17 +95,9 @@ module.exports = function resolveBuildConfig({ src, opts }) {
       noScope: true,
       Identifier(_path) {
         switch (_path.node.name) {
-          case 'resource': {
-            const { value } = _path.parent
-            if (t.isArrayExpression(value)) {
-              value.elements.forEach(el =>
-                sassResources.push(t.cloneNode(el, false, true))
-              )
-            } else {
-              sassResources.push(t.cloneNode(value, false, true))
-            }
+          case 'resource':
+            _path.parentPath.traverse(sassResourceVisitor)
             break
-          }
           case 'patterns':
             _path.parentPath.traverse(patternVisitor)
             break
@@ -95,23 +122,23 @@ module.exports = function resolveBuildConfig({ src, opts }) {
     if (sass == void 0 || t.isCallExpression(sass)) {
       sassResources.unshift(
         t.callExpression(
-          t.memberExpression(t.identifier('path'), t.identifier('resolve')),
+          t.memberExpression(t.identifier('path'), t.identifier('join')),
           [
-            t.identifier('__dirname'),
-            t.stringLiteral('..'),
+            t.callExpression(
+              t.memberExpression(t.identifier('process'), t.identifier('cwd')),
+              []
+            ),
             t.stringLiteral(opts.sass)
           ]
         )
       )
+      requires.push('path', 'process')
     } else if (t.isStringLiteral(sass)) {
       sassResources.unshift(t.stringLiteral(opts.sass))
     }
+
     const resourceAst = t.arrayExpression(sassResources)
-    const { code: resource } = generate(resourceAst, generatorOpts)
-
     const patternsAst = t.arrayExpression(patternsElements)
-    const { code: patterns } = generate(patternsAst, generatorOpts)
-
     const defineConstantsAst = t.objectExpression(
       (defineConstantsProperties.push(
         t.objectProperty(
@@ -124,11 +151,12 @@ module.exports = function resolveBuildConfig({ src, opts }) {
       ),
       defineConstantsProperties)
     )
-    const { code: defineConstants } = generate(
-      defineConstantsAst,
-      generatorOpts
-    )
 
-    return { patterns, resource, defineConstants }
+    return {
+      requires,
+      patterns: generate(patternsAst, generatorOpts).code,
+      resource: generate(resourceAst, generatorOpts).code,
+      defineConstants: generate(defineConstantsAst, generatorOpts).code
+    }
   })
 }

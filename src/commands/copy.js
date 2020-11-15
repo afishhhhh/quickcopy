@@ -24,7 +24,7 @@ function initBuildConfig(configPath, projectName, sassResource) {
       sass: sassResource
     }
   })
-    .then(({ patterns, resource, defineConstants }) => {
+    .then(({ patterns, resource, defineConstants, requires }) => {
       print(
         '\n',
         done('读取 Taro 编译配置'),
@@ -33,7 +33,7 @@ function initBuildConfig(configPath, projectName, sassResource) {
       )
       return renderFile(
         path.join(__dirname, '../../', 'templates/build.config.js'),
-        { projectName, patterns, resource, defineConstants }
+        { projectName, patterns, resource, defineConstants, requires }
       )
     })
     .then(buildConfig => {
