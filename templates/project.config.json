@@ -12,17 +12,17 @@
   }<%}%>,
   "compileType": "miniprogram",
   "libVersion": "<%= libVersion %>",
-  <%if (packOptions) {%>
+  <% if (packOptions) { %>
   "packOptions": <%- JSON.stringify(packOptions) %>,
-  <%}%>
-  <%if (debugOptions) {%>
+  <% } _%>
+  <% if (debugOptions) { %>
   "debugOptions": <%- JSON.stringify(debugOptions) %>,
-  <%}%>
-  <%if (watchOptions) {%>
+  <% } _%>
+  <% if (watchOptions) { %>
   "watchOptions": <%- JSON.stringify(watchOptions) %>,
-  <%}%>
-  <%if (scripts) {%>
+  <% } _%>
+  <% if (scripts) { %>
   "scripts": <%- JSON.stringify(scripts) %>,
-  <%}%>
+  <% } _%>
   "condition": <%- JSON.stringify(condition) %>
 }
