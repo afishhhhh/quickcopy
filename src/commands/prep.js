@@ -1,6 +1,6 @@
-const { promises: fs, existsSync } = require('fs')
-const path = require('path')
-const {
+import { promises as fs, existsSync } from 'fs'
+import path from 'path'
+import {
   print,
   info,
   done,
@@ -8,8 +8,8 @@ const {
   failed,
   styledPath,
   success
-} = require('../utils/printHelpers')
-const renderFile = require('../utils/renderFile.promisify')
+} from '../utils/printHelpers'
+import renderFile from '../utils/renderFile.promisify'
 
 async function compareModifyTime(filepath, anotherFilepath) {
   const [stats, anotherStats] = await Promise.all([
@@ -37,7 +37,7 @@ function exportBuildConfig(projectName) {
     )
 }
 
-module.exports = async function prep(projectName) {
+export default async function prep(projectName) {
   if (!projectName) {
     print('\n', warning('请输入项目名称'), '\n\n', failed('prep 指令执行失败'))
     return

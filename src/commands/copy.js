@@ -1,17 +1,17 @@
-const { promises: fs, existsSync, mkdirSync } = require('fs')
-const path = require('path')
-const prettier = require('prettier')
-const {
+import { promises as fs, existsSync, mkdirSync } from 'fs'
+import path from 'path'
+import prettier from 'prettier'
+import {
   print,
   styledPath,
   done,
   success,
   warning,
   failed
-} = require('../utils/printHelpers')
-const renderFile = require('../utils/renderFile.promisify')
-const resolvePrettierOpts = require('../utils/resolvePrettierOpts')
-const resolveBuildConfig = require('../utils/resolveBuildConfig')
+} from '../utils/printHelpers'
+import renderFile from '../utils/renderFile.promisify'
+import resolveBuildConfig from '../utils/resolveBuildConfig'
+import resolvePrettierOpts from '../utils/resolvePrettierOpts'
 
 function initBuildConfig(configPath, projectName, sassResource) {
   const taroBuildConfigPath = './config/index.js'
@@ -132,7 +132,7 @@ function createThemeScss(projectName) {
   })
 }
 
-module.exports = async function copy(projectName, appId) {
+export default async function copy(projectName, appId) {
   if (!projectName) {
     print('\n', warning('请输入项目名称'), '\n\n', failed('copy 指令执行失败'))
     return

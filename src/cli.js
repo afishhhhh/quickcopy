@@ -1,10 +1,10 @@
-const process = require('process')
-const minimist = require('minimist')
-const copy = require('./commands/copy')
-const prep = require('./commands/prep')
-const sync = require('./commands/sync')
-const rm = require('./commands/rm')
-const { print, warning } = require('./utils/printHelpers')
+import process from 'process'
+import minimist from 'minimist'
+import copy from './commands/copy'
+import prep from './commands/prep'
+import sync from './commands/sync'
+import rm from './commands/rm'
+import { print, warning } from './utils/printHelpers'
 
 class CLI {
   run() {
@@ -84,4 +84,4 @@ class CLI {
   }
 }
 
-module.exports = CLI
+export default CLI

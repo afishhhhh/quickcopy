@@ -1,12 +1,6 @@
-const { promises: fs, existsSync } = require('fs')
-const path = require('path')
-const {
-  print,
-  warning,
-  failed,
-  done,
-  success
-} = require('../utils/printHelpers')
+import { promises as fs, existsSync } from 'fs'
+import path from 'path'
+import { print, warning, failed, done, success } from '../utils/printHelpers'
 
 // TODO: rm dist
 
@@ -42,7 +36,7 @@ function removeThemeScssFile(project) {
     })
 }
 
-module.exports = async function rm(projectName) {
+export default async function rm(projectName) {
   if (!projectName) {
     print('\n', warning('请输入项目名称'), '\n\n', failed('rm 指令执行失败'))
     return

@@ -1,7 +1,7 @@
-const process = require('process')
-const prettier = require('prettier')
+import process from 'process'
+import prettier from 'prettier'
 
-module.exports = function resolvePrettierOpts(defaultOpts = {}) {
+export default function resolvePrettierOpts(defaultOpts = {}) {
   return Object.assign(
     defaultOpts,
     prettier.resolveConfig.sync(process.cwd(), {

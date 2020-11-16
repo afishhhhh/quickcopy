@@ -1,6 +1,6 @@
-const ejs = require('ejs')
+import ejs from 'ejs'
 
-module.exports = function renderFile(path, data) {
+export default function renderFile(path, data) {
   return new Promise((resolve, reject) => {
     ejs.renderFile(path, data, function (err, str) {
       if (err) {

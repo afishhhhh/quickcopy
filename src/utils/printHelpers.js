@@ -1,39 +1,39 @@
-const chalk = require('chalk')
+import chalk from 'chalk'
 
-function styledPath(path) {
+export function styledPath(path) {
   return chalk.white.underline(path)
 }
 
-function info(msg) {
+export function info(msg) {
   return chalk.cyan(msg)
 }
 
-function done(msg) {
+export function done(msg) {
   return chalk.green('✔ ', msg)
 }
 
-function success(msg) {
+export function success(msg) {
   return chalk.green('🎉', msg)
 }
 
-function warning(msg) {
+export function warning(msg) {
   return chalk.white('⚠️ ', msg)
 }
 
-function failed(msg) {
+export function failed(msg) {
   return chalk.red('🤔', msg)
 }
 
-function print(...args) {
+export function print(...args) {
   console.log(args.join(''))
 }
 
-module.exports = {
-  styledPath,
-  info,
-  done,
-  success,
-  warning,
-  failed,
-  print
-}
+// export default {
+//   styledPath,
+//   info,
+//   done,
+//   success,
+//   warning,
+//   failed,
+//   print
+// }

@@ -1,12 +1,12 @@
-const fs = require('fs').promises
-const path = require('path')
-const process = require('process')
-const generate = require('@babel/generator').default
-const traverse = require('@babel/traverse').default
-const { parse } = require('@babel/parser')
-const t = require('@babel/types')
+import { promises as fs } from 'fs'
+import path from 'path'
+import process from 'process'
+import generate from '@babel/generator'
+import traverse from '@babel/traverse'
+import { parse } from '@babel/parser'
+import * as t from '@babel/types'
 
-module.exports = function resolveBuildConfig({ src, opts }) {
+export default function resolveBuildConfig({ src, opts }) {
   return fs.readFile(src).then(buildConfig => {
     const defineConstantsProperties = []
     const patternsElements = []

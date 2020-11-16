@@ -37,14 +37,14 @@
     "@tarojs/taro-h5": "2.1.6",
     "@tarojs/taro-qq": "2.1.6",
     "@tarojs/taro-quickapp": "2.1.6",
+    "@tarojs/taro-rn": "2.1.6",
     "@tarojs/taro-swan": "2.1.6",
     "@tarojs/taro-tt": "2.1.6",
     "@tarojs/taro-weapp": "2.1.6",
-    "@tarojs/taro-rn": "2.1.6",
     "babel-runtime": "^6.26.0",
-    "regenerator-runtime": "0.11.1",
+    "nerv-devtools": "^1.5.5",
     "nervjs": "^1.5.5",
-    "nerv-devtools": "^1.5.5"
+    "regenerator-runtime": "0.11.1"
   },
   "devDependencies": {
     "@tarojs/cli": "^2.1.6",

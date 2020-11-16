@@ -1,13 +1,13 @@
-const { promises: fs, existsSync } = require('fs')
-const path = require('path')
-const {
+import { promises as fs, existsSync } from 'fs'
+import path from 'path'
+import {
   print,
   done,
   success,
   warning,
   failed,
   styledPath
-} = require('../utils/printHelpers')
+} from '../utils/printHelpers'
 
 function updateAllProjectConfig(configPaths, projectConfig) {
   return Promise.all(
@@ -90,7 +90,7 @@ function getAllProjectPaths() {
     })
 }
 
-module.exports = async function sync(isAll = false) {
+export default async function sync(isAll = false) {
   const srcProjectConfig = await readRootProjectConfig()
   const parsedProjectConfig = JSON.parse(srcProjectConfig)
   if (isAll) {
