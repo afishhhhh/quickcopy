@@ -52,7 +52,7 @@ export default function resolveBuildConfig({ src, opts }) {
     const sassResourceVisitor = {
       noScope: true,
       StringLiteral(_path) {
-        sassResources.push(t.cloneNode(_path.node, true, true))
+        sassResources.push(t.cloneNode(_path.node, false, true))
         _path.skip()
       },
       CallExpression(_path) {
